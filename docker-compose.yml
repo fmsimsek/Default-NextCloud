@@ -1,0 +1,71 @@
+version: '3.9'
+
+services:
+
+  NextCloud:
+    image: 'nextcloud:20.0.13-apache'
+
+    volumes:
+     - nextcloud:/var/www/html/data/
+    
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.12
+         
+    ports:
+     - "80:80"
+     - "443:443"
+
+
+    environment:
+      MYSQL_HOST: Mysql
+      MYSQL_DATABASE: NextCloud
+      MYSQL_USER:     NextUser
+      MYSQL_PASSWORD: ThisisTryBeta
+      MYSQL_ROOT_PASSWORD: ThisisTryBeta123
+      NEXTCLOUD_ADMIN_PASSWORD: ThisisTryBeta
+      NEXTCLOUD_ADMIN_USER: NextUser
+ 
+
+  Mysql:
+    image: 'mysql:8.0'
+    
+    command: '--default-authentication-plugin=mysql_native_password --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci'
+
+    volumes:
+      - NextData:/var/lib/mysql
+ 
+    ports: 
+      - "3306:3306"
+
+    networks:
+      app_net:
+        ipv4_address: 172.16.238.10
+        
+
+    environment:
+      MYSQL_DATABASE: NextCloud
+      MYSQL_USER: NextUser
+      MYSQL_PASSWORD: ThisisTryBeta
+      MYSQL_ROOT_PASSWORD: ThisisTryBeta123
+
+
+
+networks:
+  app_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet : 172.16.238.0/24
+
+        
+volumes:
+ nextcloud:
+ NextData:
+
+ 
+        
+
+
+ 
